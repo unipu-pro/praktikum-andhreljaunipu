@@ -1,0 +1,11 @@
+## docker build --target test
+#15 0.739 ============================== 7 passed in 0.15s ===============================
+## version
+llm 1.0.0
+## user
+uid=10001(app) gid=10001(app) groups=10001(app)
+## status
+Ollama is running at http://host.docker.internal:11434
+## stop
+docker stop chk > /dev/null  0.01s user 0.01s system 23% cpu 0.112 total
+exit code 143
