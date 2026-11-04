@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DEFAULT_BASE_URL = os.getenv("OLLAMA_BASE_URL")
-DEFAULT_MODEL = os.getenv("OLLAMA_MODEL")
+DEFAULT_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://host.docker.internal:11434")
+DEFAULT_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:1b")
 TIMEOUT_SECONDS = 120
 
 
