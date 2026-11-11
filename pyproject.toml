@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "praktikum-llm-andhreljaunipu"
 description = "Command line client for a local Ollama model (Praktikum: Razvojne operacije)."
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 dynamic = ["version", "dependencies"]
 
 [project.scripts]
