@@ -1,0 +1,75 @@
+name: hello
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      greeting:
+        description: "Word to greet with"
+        type: string
+        default: Hello
+      show-context:
+        description: "Print the whole github context"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    outputs:
+        message: ${{ steps.compose.outputs.message }}
+    steps:
+      - name: Hello, world
+        run: echo "Hello, world from job ${{ github.job }}"
+
+      - name: Who, what, where
+        run: |
+          echo "event:      ${{ github.event_name }}"
+          echo "repository: $GITHUB_REPOSITORY"
+          echo "ref:        $GITHUB_REF  (sha ${GITHUB_SHA::7})"
+          echo "actor:      $GITHUB_ACTOR"
+          echo "runner:     $RUNNER_OS / $RUNNER_ARCH, $(nproc) CPUs"
+
+      - name: An ephemeral machine starts empty
+        run: |
+          echo "workspace: $GITHUB_WORKSPACE"
+          ls -la "$GITHUB_WORKSPACE"
+          whoami; uname -r; df -h / | tail -1
+
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Now the code is here
+        run: ls -la && cat version.txt
+
+      - name: Print the github context
+        if: github.event_name != 'workflow_dispatch' || inputs.show-context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Compose a message
+        id: compose
+        env:
+          GREETING: ${{ inputs.greeting || 'Hello' }}
+        run: echo "message=$GREETING from $GITHUB_ACTOR, version $(cat version.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: Job summary
+        run: |
+          echo "### ${{ steps.compose.outputs.message }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Triggered by \`${{ github.event_name }}\` on \`${{ github.ref_name }}\`." >> "$GITHUB_STEP_SUMMARY"
+
+  goodbye:
+    needs: hello
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read the output of the previous job
+        env:
+          MESSAGE: ${{ needs.hello.outputs.message }}
+        run: |
+          echo "hello said: $MESSAGE"
+          ls -la "$GITHUB_WORKSPACE"

@@ -48,7 +48,7 @@ services:
     restart: "no"
 
   open-webui:
-    image: ghcr.io/open-webui/open-webui:v0.7.2
+    image: ghcr.io/open-webui/open-webui:v0.13.3
     ports:
       - "127.0.0.1:3000:8080" # http://localhost:3000, only from this machine
     environment:
