@@ -54,7 +54,7 @@ jobs:
           load: true
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ github.event.pull_request.head.ref }}
+            ghcr.io/${{ github.repository }}:${{ github.event.pull_request.head.sha }}
           cache-from: type=gha,scope=runtime
           cache-to: type=gha,scope=runtime,mode=max
 
@@ -63,5 +63,5 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         run: |
           docker image ls ghcr.io/${{ github.repository }}
-          docker run --rm ghcr.io/${{ github.repository }}:${{ github.event.pull_request.head.ref }} --version
-          test "$(docker run --rm ghcr.io/${{ github.repository }}:${{ github.event.pull_request.head.ref }} --version)" = "llm $VERSION"
+          docker run --rm ghcr.io/${{ github.repository }}:${{ github.event.pull_request.head.sha }} --version
+          test "$(docker run --rm ghcr.io/${{ github.repository }}:${{ github.event.pull_request.head.sha }} --version)" = "llm $VERSION"
