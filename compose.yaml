@@ -5,7 +5,67 @@ services:
     build:
       context: .
     image: praktikum-llm
-    network_mode: host
+    networks:
+      - backend
+    depends_on:
+      ollama-pull:
+        condition: service_completed_successfully
     environment:
-      OLLAMA_BASE_URL: http://localhost:11434
-      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.2:1b}
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL}
+      OLLAMA_MODEL: ${OLLAMA_MODEL}
+
+  ollama-server:
+    image: ollama/ollama:0.40.13
+    networks:
+      - backend
+    volumes:
+      - ollama-models:/root/.ollama 
+    healthcheck:
+      test:
+        - "CMD"
+        - "ollama"
+        - "list"
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+    restart: unless-stopped
+
+  ollama-pull:
+  # One-shot job: same image, but only the CLI, which pulls the model into ollama-server and exits.
+    image: ollama/ollama:0.40.13
+    entrypoint:
+      - "ollama"
+      - "pull"
+      - "${OLLAMA_MODEL}"
+    environment:
+      OLLAMA_HOST: ${OLLAMA_BASE_URL}
+    networks:
+      - backend
+    depends_on:
+      ollama-server:
+        condition: service_healthy
+    restart: "no"
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:v0.7.2
+    ports:
+      - "127.0.0.1:3000:8080" # http://localhost:3000, only from this machine
+    environment:
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL}
+      WEBUI_AUTH: "False" # single-user local setup; never on a shared server
+    volumes:
+      - open-webui-data:/app/backend/data
+    networks:
+      - backend
+    depends_on:
+      ollama-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  ollama-models:
+  open-webui-data:
+
+networks:
+  backend:
