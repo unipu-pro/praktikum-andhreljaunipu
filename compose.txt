@@ -1,0 +1,10 @@
+## up
+llm: Up Less than a second 
+ollama-pull: Exited (0) Less than a second ago 
+ollama-server: Up 16 seconds (healthy) 11434/tcp
+open-webui: Up 10 seconds (health: starting) 127.0.0.1:3000->8080/tcp
+## status
+Ollama is running at http://ollama-server:11434
+## persist
+NAME           ID              SIZE      MODIFIED               
+llama3.2:1b    baf6a787fdff    1.3 GB    Less than a second ago    
