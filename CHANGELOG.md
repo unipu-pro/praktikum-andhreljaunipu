@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://github.com/unipu-pro/praktikum-andhreljaunipu/compare/v1.1.0...v1.2.0) (2026-11-11)
+
+
+### Features
+
+* run the CLI with Docker Compose ([a2fb2f1](https://github.com/unipu-pro/praktikum-andhreljaunipu/commit/a2fb2f14165008a523cc80bb89e3e5f89921f3fc))
+
+
+### Performance Improvements
+
+* Compose Ollama ([3e47912](https://github.com/unipu-pro/praktikum-andhreljaunipu/commit/3e479124ed239d0370ac06bfc6a6d1494b2fd435))
+* week 4 ([6d1f25c](https://github.com/unipu-pro/praktikum-andhreljaunipu/commit/6d1f25ce2cb10df4667dc4dc759aa4ad300fc057))
+
 ## [1.1.0](https://github.com/unipu-pro/praktikum-andhreljaunipu/compare/v1.0.0...v1.1.0) (2026-11-04)
 
 
