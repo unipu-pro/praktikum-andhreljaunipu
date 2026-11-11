@@ -3,6 +3,7 @@ import argparse
 import sys
 import signal
 from pathlib import Path
+from importlib import metadata
 
 import ollama_client
 
@@ -13,14 +14,19 @@ def _exit_on_sigterm(signum, frame) -> None:
     raise SystemExit(128 + signum)
 
 def read_version() -> str:
-    """Returns the version from version.txt (bumped by release-please), or
-    blok-b-vjezba.md 2026-10-27
-    5 / 11
-    0.0.0 when the file is missing."""
-    try:
+    """Returns the tool version.
+
+    1. version.txt next to llm.py: a git checkout or a container image (bumped by release-please).
+    2. The metadata of the installed distribution: after `pip install` from (Test)PyPI,
+       version.txt is not next to the module, but the wheel recorded the version.
+    3. 0.0.0 when neither exists.
+    """
+    if VERSION_FILE.exists():
         return VERSION_FILE.read_text(encoding="utf-8").strip()
-    except FileNotFoundError:
-        return "0.0.0"
+    distributions = metadata.packages_distributions().get("praktikum-llm-andhreljaunipu")
+    if distributions:
+        return metadata.version(distributions[0])
+    return "0.0.0"
 
 def cmd_status(args: argparse.Namespace) -> int:
     if ollama_client.is_running():
