@@ -10,3 +10,6 @@ pytest.txt
 docker.txt
 **/__pycache__/
 **/*.pyc
+build/
+dist/
+*.egg-info/
