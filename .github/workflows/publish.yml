@@ -117,7 +117,7 @@ jobs:
     steps:
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.13"
+          python-version: "3.14"
 
       - name: Install the published package from TestPyPI
         env:
