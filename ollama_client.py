@@ -1,4 +1,5 @@
 """Minimal client for the local Ollama REST API (https://github.com/ollama/ollama/blob/main/docs/api.md)."""
+
 import os
 
 import requests
@@ -6,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DEFAULT_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://host.docker.internal:11434")
+DEFAULT_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 DEFAULT_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2:1b")
 TIMEOUT_SECONDS = 120
 
@@ -28,9 +29,13 @@ def _request(method: str, path: str, **kwargs) -> requests.Response:
     try:
         response = requests.request(method, url, timeout=TIMEOUT_SECONDS, **kwargs)
     except requests.ConnectionError as error:
-        raise OllamaError(f"Ollama is not reachable at {get_base_url()} (start it with: ollama serve)") from error
+        raise OllamaError(
+            f"Ollama is not reachable at {get_base_url()} (start it with: ollama serve)"
+        ) from error
     if response.status_code != 200:
-        raise OllamaError(f"Ollama returned HTTP {response.status_code}: {response.text}")
+        raise OllamaError(
+            f"Ollama returned HTTP {response.status_code}: {response.text}"
+        )
     return response
 
 
@@ -52,7 +57,9 @@ def generate(prompt: str, model: str | None = None) -> str:
     return _request("POST", "/api/generate", json=payload).json()["response"]
 
 
-def build_messages(question: str, system: str | None = None, history: list[dict] | None = None) -> list[dict]:
+def build_messages(
+    question: str, system: str | None = None, history: list[dict] | None = None
+) -> list[dict]:
     messages = []
     if system:
         messages.append({"role": "system", "content": system})
